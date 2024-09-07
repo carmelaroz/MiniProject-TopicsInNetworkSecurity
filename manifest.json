@@ -1,0 +1,11 @@
+{
+    "name": "Email Link Scanner",
+    "version": "1.0.0",
+    "description": "this is an extenstion to detect mallicious links in gmail",
+    "manifest_version": 3,
+    "author": "Carmela Rozhinski & Matan Bohadana",
+    "action": {
+        "default_popup": "index.html",
+        "default_title": "Email Link Scanner"
+    }
+}   
