@@ -4,8 +4,25 @@
     "description": "this is an extenstion to detect mallicious links in gmail",
     "manifest_version": 3,
     "author": "Carmela Rozhinski & Matan Bohadana",
-    "action": {
+    "permissions": [
+        "activeTab",
+        "scripting"
+      ],
+      "background": {
+        "service_worker": "background.js"
+      },
+      "content_scripts": [
+        {
+          "matches": ["https://mail.google.com/*"],
+          "js": ["content.js"],
+          "run_at": "document_end"
+        }
+      ],
+      "host_permissions": [
+        "https://mail.google.com/*"
+      ],
+      "action": {
         "default_popup": "index.html",
         "default_title": "Email Link Scanner"
-    }
+      }
 }   
