@@ -5,9 +5,10 @@
     "manifest_version": 3,
     "author": "Carmela Rozhinski & Matan Bohadana",
     "permissions": [
-        "activeTab",
-        "scripting"
-      ],
+    "activeTab",
+    "scripting",
+    "webNavigation"
+    ],
       "background": {
         "service_worker": "background.js"
       },
