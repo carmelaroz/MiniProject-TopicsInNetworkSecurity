@@ -1,4 +1,3 @@
-const suspiciousLink = "https://gezer1.bgu.ac.il/meser";  // Use the main part of the suspicious link
 let currentURL = window.location.href;
 
 function getCompletedReadyState() {
@@ -16,7 +15,7 @@ function getCompletedReadyState() {
 
 
 // Function to scan for suspicious links
-function scanLinks(messageBody) {
+async function scanLinks(messageBody) {
   if (messageBody) {
     console.log("Message body detected. Scanning for links...");
 
@@ -24,19 +23,28 @@ function scanLinks(messageBody) {
     let maliciousFound = false;  // Flag to track if we find a malicious link
 
     links.forEach(link => {
-      // Check if the link starts with the suspicious link
-      if (link.href.startsWith(suspiciousLink)) {
-        maliciousFound = true;
-      }
-    });
-
-    if (maliciousFound) {
-      // Show malicious link notification
-      showNotification("Suspicious link detected!", true);
-    } else {
-      // Show safe link notification if no malicious links were found
-      showNotification("No suspicious links detected.", false);
-    }
+        console.log(`Scanning link: ${link.href}`);
+  
+        // Send message to background script to check link with VirusTotal
+        chrome.runtime.sendMessage({ action: 'scanLink', url: link.href }, (response) => {
+          if (chrome.runtime.lastError) {
+              console.error("Runtime error:", chrome.runtime.lastError.message);
+              showNotification("Error scanning link.", true);  // Notify user of error
+              return;
+          }
+          if (response) {
+              console.log("Response received from background script:", response);
+              if (response.malicious) {
+                  maliciousFound = true;
+                  showNotification("Suspicious link detected!", true);
+              } else {
+                  showNotification("No suspicious links detected.", false);
+              }
+          } else {
+              console.log("No response received from background script");
+          }
+      });
+      });
 
     console.log("Scanning completed.");
   } else {
@@ -90,8 +98,6 @@ function showNotification(message, isMalicious) {
 
 // Function to find the message container dynamically
 function findMessageContainer() {
-  //
-  //div[role="listitem"], div.ii.gt, div[role="tabpanel"], div.a3s.aXjCH
   let messageBody = document.querySelector('div.ii.gt, div.a3s.aXjCH');
   
   if (messageBody) {

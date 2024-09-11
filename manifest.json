@@ -7,7 +7,14 @@
     "permissions": [
     "activeTab",
     "scripting",
-    "webNavigation"
+    "webNavigation",
+    "storage",
+    "alarms",
+    "webRequest",
+    "background",
+    "declarativeNetRequest",
+    "declarativeNetRequestWithHostAccess",
+    "tabs"
     ],
       "background": {
         "service_worker": "background.js"
@@ -20,7 +27,11 @@
         }
       ],
       "host_permissions": [
-        "https://mail.google.com/*"
+        "https://mail.google.com/*",
+        "*://www.virustotal.com/*",
+        "https://safebrowsing.googleapis.com/",
+        "https://*/*",
+        "http://*/*"
       ],
       "action": {
         "default_popup": "index.html",
