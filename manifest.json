@@ -1,40 +1,41 @@
+
 {
-    "name": "Email Link Scanner",
-    "version": "1.0.0",
-    "description": "this is an extenstion to detect mallicious links in gmail",
-    "manifest_version": 3,
-    "author": "Carmela Rozhinski & Matan Bohadana",
-    "permissions": [
-    "activeTab",
-    "scripting",
-    "webNavigation",
-    "storage",
-    "alarms",
-    "webRequest",
-    "background",
-    "declarativeNetRequest",
-    "declarativeNetRequestWithHostAccess",
-    "tabs"
-    ],
-      "background": {
-        "service_worker": "background.js"
-      },
-      "content_scripts": [
-        {
-          "matches": ["https://mail.google.com/*"],
-          "js": ["content.js"],
-          "run_at": "document_end"
-        }
-      ],
-      "host_permissions": [
-        "https://mail.google.com/*",
-        "*://www.virustotal.com/*",
-        "https://safebrowsing.googleapis.com/",
-        "https://*/*",
-        "http://*/*"
-      ],
-      "action": {
-        "default_popup": "index.html",
-        "default_title": "Email Link Scanner"
+  "name": "Email Link Scanner",
+  "version": "1.0.0",
+  "description": "this is an extenstion to detect mallicious links in gmail",
+  "manifest_version": 3,
+  "author": "Carmela Rozhinski & Matan Bohadana",
+  "permissions": [
+  "activeTab",
+  "scripting",
+  "webNavigation",
+  "storage",
+  "alarms",
+  "webRequest",
+  "background",
+  "declarativeNetRequest",
+  "declarativeNetRequestWithHostAccess",
+  "tabs"
+  ],
+    "background": {
+      "service_worker": "background.js"
+    },
+    "content_scripts": [
+      {
+        "matches": ["https://mail.google.com/*"],
+        "js": ["content.js"],
+        "run_at": "document_end"
       }
+    ],
+    "host_permissions": [
+      "https://mail.google.com/*",
+      "*://www.virustotal.com/*",
+      "https://safebrowsing.googleapis.com/",
+      "https://*/*",
+      "http://*/*"
+    ],
+    "action": {
+      "default_popup": "index.html",
+      "default_title": "Email Link Scanner"
+    }
 }   

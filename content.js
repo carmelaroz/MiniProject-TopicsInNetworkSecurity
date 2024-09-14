@@ -15,12 +15,14 @@ function getCompletedReadyState() {
 
 
 // Function to scan for suspicious links
-async function scanLinks(messageBody) {
+/*async function scanLinks(messageBody) {
   if (messageBody) {
     console.log("Message body detected. Scanning for links...");
 
     const links = messageBody.querySelectorAll('a');
-    let maliciousFound = false;  // Flag to track if we find a malicious link
+    // maliciousFound = false;  // Flag to track if we find a malicious link
+    let maliciousLinks = [];  // Array to collect malicious links
+
 
     links.forEach(link => {
         console.log(`Scanning link: ${link.href}`);
@@ -36,6 +38,7 @@ async function scanLinks(messageBody) {
               console.log("Response received from background script:", response);
               if (response.malicious) {
                   maliciousFound = true;
+                  
                   showNotification("Suspicious link detected!", true);
               } else {
                   showNotification("No suspicious links detected.", false);
@@ -44,7 +47,49 @@ async function scanLinks(messageBody) {
               console.log("No response received from background script");
           }
       });
+    });
+
+    console.log("Scanning completed.");
+  } else {
+    console.log("No message body found.");
+  }
+}*/
+
+async function scanLinks(messageBody) {
+  if (messageBody) {
+    console.log("Message body detected. Scanning for links...");
+
+    const links = messageBody.querySelectorAll('a');
+    let maliciousLinks = [];  // Array to collect malicious links
+
+    for (const link of links) {
+      console.log(`Scanning link: ${link.href}`);
+
+      // Send message to background script to check link with VirusTotal
+      await new Promise((resolve) => {
+        chrome.runtime.sendMessage({ action: 'scanLink', url: link.href }, (response) => {
+          if (chrome.runtime.lastError) {
+            console.error("Runtime error:", chrome.runtime.lastError.message);
+            showNotification("Error scanning link.", true);  // Notify user of error
+            resolve();  // Continue to the next link
+            return;
+          }
+
+          if (response && response.malicious) {
+            maliciousLinks.push(link.href.slice(0, -1));
+          }ec
+
+          resolve();  // Continue to the next link
+        });
       });
+    }
+
+    // Once all links are scanned, show a notification with the result
+    if (maliciousLinks.length > 0) {
+      showNotification(`Suspicious links detected\n${maliciousLinks.join('\n')}`, true);
+    } else {
+      showNotification("No suspicious links detected.", false);
+    }
 
     console.log("Scanning completed.");
   } else {
@@ -70,6 +115,7 @@ function showNotification(message, isMalicious) {
   notification.style.padding = '10px';
   notification.style.borderRadius = '5px';
   notification.style.zIndex = '9999';
+  notification.style.whiteSpace = 'pre-wrap'; 
   notification.className = 'email-link-scanner-notification';  // Add a class for easier identification
   notification.textContent = message;
 
@@ -93,7 +139,7 @@ function showNotification(message, isMalicious) {
   // Remove the notification after 5 seconds
   setTimeout(() => {
     notification.remove();
-  }, 5000);  // Adjust the duration as needed
+  }, 10000);  // Adjust the duration as needed
 }
 
 // Function to find the message container dynamically

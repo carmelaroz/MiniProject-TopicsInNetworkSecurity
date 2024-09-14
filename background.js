@@ -1,5 +1,6 @@
 function isSuspiciousUrl(url) {
   const suspiciousPatterns = [
+    /^http:\/\//,              // Links starting with http 
     /@@/,                   
     /\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/, // IP address in URL
     /%[0-9a-fA-F]{2}/,        // Encoded characters (e.g., %20) might be used to obfuscate
