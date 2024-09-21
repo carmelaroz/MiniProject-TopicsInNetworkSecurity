@@ -1,4 +1,5 @@
 let currentURL = window.location.href;
+let lastScannedMessage = '';  // Track the last scanned message
 
 function getCompletedReadyState() {
   return new Promise((resolve) => {
@@ -57,6 +58,13 @@ function getCompletedReadyState() {
 
 async function scanLinks(messageBody) {
   if (messageBody) {
+    const messageId = messageBody.dataset.messageId || messageBody.textContent.slice(0, 50); // Unique identifier for the message
+    if (messageId === lastScannedMessage) {
+      console.log('This message has already been scanned.');
+      return;  // Skip if the message has been scanned
+    }
+    
+    lastScannedMessage = messageId;  // Update the last scanned message ID
     console.log("Message body detected. Scanning for links...");
 
     const links = messageBody.querySelectorAll('a');
@@ -77,7 +85,7 @@ async function scanLinks(messageBody) {
 
           if (response && response.malicious) {
             maliciousLinks.push(link.href.slice(0, -1));
-          }ec
+          }
 
           resolve();  // Continue to the next link
         });

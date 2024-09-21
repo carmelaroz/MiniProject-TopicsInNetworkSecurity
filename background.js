@@ -1,27 +1,30 @@
 function isSuspiciousUrl(url) {
   const suspiciousPatterns = [
-    /^http:\/\//,              // Links starting with http 
-    /@@/,                   
-    /\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/, // IP address in URL
-    /%[0-9a-fA-F]{2}/,        // Encoded characters (e.g., %20) might be used to obfuscate
-    /\.tk|\.ml|\.ga|\.cf|\.gq/, // Suspicious TLDs often used by malicious sites
-    /malware/,
-    /test/, 
-    /phishing/, 
-    /scam/,  
-    /ransomware/
+    // /^http:\/\//,  // Matches URLs starting with http (not https)
+    /@@/,  // Matches `@@` often seen in phishing URLs
+    /\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/,  // IP address in URL, not typical for legitimate sites
+    /\.(tk|ml|ga|cf|gq|xyz|club|top|icu|work|info|phish)$/,  // Suspicious TLDs commonly used in phishing
+    /(malware|phishing|scam|ransomware)/i,  // Keywords indicating malicious intent
   ];
 
-  const maxUrlLength = 2000;
+  const urlObj = new URL(url);
+
   const maxSubdomains = 20;
+  const domainParts = urlObj.hostname.split('.'); 
   const slashCount = (url.match(/\//g) || []).length;
 
-  if (url.length > maxUrlLength) {
-    console.log("URL length exceeds threshold.");
+  // Check if the URL uses an IP address instead of a domain
+  const ipRegex = /^(http|https):\/\/(\d{1,3}\.){3}\d{1,3}/;
+  if (ipRegex.test(url)) {
+    return true;
+  }
+
+  if (domainParts.length > maxSubdomains) {
+    console.log("URL has too many subdomains.");
     return true;  
   }
 
-  if (slashCount > maxSubdomains) {
+  if (slashCount > 20) {
     console.log("URL has too many slashes.");
     return true;  
   }
@@ -32,6 +35,19 @@ function isSuspiciousUrl(url) {
       return true;  
     }
   }
+
+  // Check for common URL shorteners
+  const shorteners = ['bit.ly', 't.co', 'goo.gl', 'tinyurl.com', 'ow.ly', 'is.gd', 'buff.ly', 'adf.ly', 'bit.do'];
+  if (shorteners.includes(urlObj.hostname)) {
+    console.log("URL uses a common shortener:", urlObj.hostname);
+    return true;
+  }
+
+    // Check for known phishing patterns in the hostname
+    const phishingKeywords = ['rex', 'phish', 'secure', 'login', 'update', 'account', 'verify', 'test'];
+    if (phishingKeywords.some(keyword => urlObj.hostname.includes(keyword))) {
+      return true;
+    }
 
   return false;  
 }
