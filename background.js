@@ -44,10 +44,19 @@ function isSuspiciousUrl(url) {
   }
 
     // Check for known phishing patterns in the hostname
-    const phishingKeywords = ['rex', 'phish', 'secure', 'login', 'update', 'account', 'verify', 'test'];
-    if (phishingKeywords.some(keyword => urlObj.hostname.includes(keyword))) {
+    const phishingKeywordsInHostName = ['rex', 'phish', 'secure', 'login', 'update', 'verify', 'test'];
+    if (phishingKeywordsInHostName.some(keyword => urlObj.hostname.includes(keyword))) {
       return true;
     }
+
+      // Check for known phishing keywords in the full URL
+  const phishingKeywordsInURL = ['rex', 'phish', 'secure', 'update', 'evil', 'verify', 'test', 'eicar'];
+  for (let keyword of phishingKeywordsInURL) {
+    if (url.toLowerCase().includes(keyword)) {
+      console.log(`Suspicious: URL contains phishing keyword (${keyword}) - ${url}`);
+      return true;
+    }
+  }
 
   return false;  
 }
