@@ -14,48 +14,6 @@ function getCompletedReadyState() {
   });
 }
 
-
-// Function to scan for suspicious links
-/*async function scanLinks(messageBody) {
-  if (messageBody) {
-    console.log("Message body detected. Scanning for links...");
-
-    const links = messageBody.querySelectorAll('a');
-    // maliciousFound = false;  // Flag to track if we find a malicious link
-    let maliciousLinks = [];  // Array to collect malicious links
-
-
-    links.forEach(link => {
-        console.log(`Scanning link: ${link.href}`);
-  
-        // Send message to background script to check link with VirusTotal
-        chrome.runtime.sendMessage({ action: 'scanLink', url: link.href }, (response) => {
-          if (chrome.runtime.lastError) {
-              console.error("Runtime error:", chrome.runtime.lastError.message);
-              showNotification("Error scanning link.", true);  // Notify user of error
-              return;
-          }
-          if (response) {
-              console.log("Response received from background script:", response);
-              if (response.malicious) {
-                  maliciousFound = true;
-                  
-                  showNotification("Suspicious link detected!", true);
-              } else {
-                  showNotification("No suspicious links detected.", false);
-              }
-          } else {
-              console.log("No response received from background script");
-          }
-      });
-    });
-
-    console.log("Scanning completed.");
-  } else {
-    console.log("No message body found.");
-  }
-}*/
-
 async function scanLinks(messageBody) {
   if (messageBody) {
     const messageId = messageBody.dataset.messageId || messageBody.textContent.slice(0, 50); // Unique identifier for the message
@@ -68,7 +26,7 @@ async function scanLinks(messageBody) {
     console.log("Message body detected. Scanning for links...");
 
     const links = messageBody.querySelectorAll('a');
-    let maliciousLinks = [];  // Array to collect malicious links
+    let suspiciousLinks = [];  // Array to collect malicious links
 
     for (const link of links) {
       console.log(`Scanning link: ${link.href}`);
@@ -84,7 +42,7 @@ async function scanLinks(messageBody) {
           }
 
           if (response && response.malicious) {
-            maliciousLinks.push(link.href.slice(0, -1));
+            suspiciousLinks.push(link.href.slice(0, -1));
           }
 
           resolve();  // Continue to the next link
@@ -92,18 +50,51 @@ async function scanLinks(messageBody) {
       });
     }
 
-    // Once all links are scanned, show a notification with the result
-    if (maliciousLinks.length > 0) {
-      showNotification(`Suspicious links detected\n${maliciousLinks.join('\n')}`, true);
-    } else {
-      showNotification("No suspicious links detected.", false);
-    }
+      // If there are suspicious links, now scan them with VirusTotal
+      if (suspiciousLinks.length > 0) {
+        await scanWithVirusTotal(suspiciousLinks);
+      } else {
+        showNotification("No suspicious links detected.", false);
+      }
 
     console.log("Scanning completed.");
   } else {
     console.log("No message body found.");
   }
 }
+
+async function scanWithVirusTotal(suspiciousLinks) {
+  let maliciousLinks = [];  // Array to collect links flagged by VirusTotal
+
+  for (const link of suspiciousLinks) {
+    console.log(`Sending link to VirusTotal: ${link}`);
+
+    // Send a request to VirusTotal API for each link
+    await new Promise((resolve) => {
+      chrome.runtime.sendMessage({ action: 'scanLinksWithVirusTotal', url: link }, (response) => {
+        if (chrome.runtime.lastError) {
+          console.error("VirusTotal scanning error:", chrome.runtime.lastError.message);
+          resolve();  // Continue to the next link
+          return;
+        }
+
+        if (response && response.malicious) {
+          console.log(`malicious link from VirusTotal: ${link}`);
+          maliciousLinks.push(link);
+        }
+
+        resolve();  // Continue to the next link
+      });
+    });
+
+      // Once all links are checked, show the final notification
+      if (maliciousLinks.length > 0) {
+        showNotification(`Malicious links detected:\n${maliciousLinks.join('\n')}`, true);
+      } else {
+        showNotification("No suspicious links detected.", false);
+      }
+      }
+  }
 
 function showNotification(message, isMalicious) {
   // Remove any existing notifications first to avoid duplicates

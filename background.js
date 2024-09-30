@@ -69,3 +69,58 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return true;
   }
 });
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === 'scanLinksWithVirusTotal') {
+    const apiKey = '664f26ac747095f284831a287dcaeea9fa07fa26165f4a2290e121d142991638';
+    const virusTotalUrl = 'https://www.virustotal.com/api/v3/urls';
+
+    // VirusTotal requires the URL to be base64 encoded
+    const url = message.url;
+    const base64Url = btoa(url);
+
+    const headers = new Headers({
+      "Accept": "application/json",
+      "x-apikey": apiKey,
+      "Content-Type": "application/x-www-form-urlencoded"
+    });
+
+    fetch(`${virusTotalUrl}/${base64Url}`, {
+      method: 'GET',  // Use GET for URL lookups
+      headers: headers,
+    })
+    .then(response => response.json())
+    .then(data => {
+      // Error handling for VirusTotal API response
+      if (data.error) {
+        console.error("VirusTotal API Error:", data.error.message);
+
+        if (data.error.code === 'QuotaExceeded') {
+          console.error('VirusTotal API quota exceeded.');
+        }
+        sendResponse({ malicious: false });
+        return;
+      }
+
+      // Handle cases where data or specific fields are missing
+      if (!data.data || !data.data.attributes || !data.data.attributes.last_analysis_stats) {
+        console.error("Invalid VirusTotal API response format", data);
+        sendResponse({ malicious: false });
+        return;
+      }
+
+      // Determine if the URL is flagged as malicious by VirusTotal
+      const isMalicious = data.data.attributes.last_analysis_stats.malicious > 0;
+      console.log("VirusTotal scan result:", isMalicious);
+
+      sendResponse({ malicious: isMalicious });
+    })
+    .catch((error) => {
+      console.error('Error with VirusTotal API request:', error);
+      sendResponse({ malicious: false });
+    });
+
+    // Return true to indicate asynchronous response
+    return true;
+  }
+});
