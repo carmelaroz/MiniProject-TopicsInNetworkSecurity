@@ -36,6 +36,6 @@
     ],
     "action": {
       "default_popup": "index.html",
-      "default_title": "Email Link Scanner"
+      "default_title": "Gmail Link Scanner"
     }
 }   

@@ -109,23 +109,26 @@ function showNotification(message, isMalicious) {
   notification.style.backgroundColor = isMalicious ? '#f44336' : '#4CAF50';  
   notification.style.color = 'white';
   notification.style.position = 'fixed';
-  notification.style.bottom = '10px';
+  notification.style.bottom = '0.1px';
   notification.style.right = '10px';
-  notification.style.padding = '10px';
+  notification.style.padding = '15px 10px 10px 40px';
   notification.style.borderRadius = '5px';
   notification.style.zIndex = '9999';
   notification.style.whiteSpace = 'pre-wrap'; 
-  notification.className = 'email-link-scanner-notification';  // Add a class for easier identification
+  notification.className = 'email-link-scanner-notification'; 
   notification.textContent = message;
 
   // Add a close button to dismiss the notification
   const closeButton = document.createElement('button');
   closeButton.textContent = 'x';
-  closeButton.style.marginLeft = '10px';
+  closeButton.style.position = 'absolute'; 
+  closeButton.style.top = '5px'; 
+  closeButton.style.left = '10px'; 
   closeButton.style.backgroundColor = 'transparent';
   closeButton.style.color = 'white';
   closeButton.style.border = 'none';
   closeButton.style.cursor = 'pointer';
+  closeButton.style.fontSize = '18px'; 
   closeButton.addEventListener('click', () => {
     notification.remove();
   });
