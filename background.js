@@ -1,6 +1,5 @@
 function isSuspiciousUrl(url) {
   const suspiciousPatterns = [
-    // /^http:\/\//,  // Matches URLs starting with http (not https)
     /@@/,  // Matches `@@` often seen in phishing URLs
     /\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/,  // IP address in URL, not typical for legitimate sites
     /\.(tk|ml|ga|cf|gq|xyz|club|top|icu|work|info|phish)$/,  // Suspicious TLDs commonly used in phishing
@@ -82,7 +81,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     // VirusTotal requires the URL to be base64 encoded
     const url = message.url;
     const base64Url = urlSafeBase64Encode(url);
-    // const base64Url = btoa(url);
 
     const headers = new Headers({
       "Accept": "application/json",

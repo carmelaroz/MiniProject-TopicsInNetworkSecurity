@@ -1,8 +1,8 @@
 
 {
-  "name": "Email Link Scanner",
+  "name": "Gmail Link Scanner",
   "version": "1.0.0",
-  "description": "this is an extenstion to detect mallicious links in gmail",
+  "description": "this is an extenstion to detect malicious links in gmail",
   "manifest_version": 3,
   "author": "Carmela Rozhinski & Matan Bohadana",
   "permissions": [
@@ -35,7 +35,19 @@
       "http://*/*"
     ],
     "action": {
+      "default_icon": {
+        "128": "images/gmail_link_scanner_icon.png"
+      },
       "default_popup": "index.html",
       "default_title": "Gmail Link Scanner"
-    }
+    },
+    "icons": {
+      "48": "images/gmail_link_scanner_icon.png"
+    },
+    "web_accessible_resources": [
+      {
+        "resources": ["images/*"],
+        "matches": ["<all_urls>"]
+      }
+    ]
 }   

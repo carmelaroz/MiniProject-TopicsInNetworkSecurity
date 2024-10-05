@@ -54,7 +54,7 @@ async function scanLinks(messageBody) {
       if (suspiciousLinks.length > 0) {
         await scanWithVirusTotal(suspiciousLinks);
       } else {
-        showNotification("No suspicious links detected.", false);
+        showNotification("No suspicious links detected", false);
       }
 
     console.log("Scanning completed.");
@@ -117,6 +117,17 @@ function showNotification(message, isMalicious) {
   notification.style.whiteSpace = 'pre-wrap'; 
   notification.className = 'email-link-scanner-notification'; 
   notification.textContent = message;
+
+  // Create and add the icon
+  const icon = document.createElement('img');
+  icon.src = chrome.runtime.getURL('images/gmail_link_scanner_icon.png');
+  icon.style.width = '24px';
+  icon.style.height = '24px';
+  icon.style.marginLeft = '10px';
+  icon.style.verticalAlign = 'middle';
+
+  // Prepend the icon to the notification
+  notification.prepend(icon);
 
   // Add a close button to dismiss the notification
   const closeButton = document.createElement('button');
