@@ -1,0 +1,129 @@
+/* Body and Overall Layout */
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #ff6e7f, #bfe9ff, #77dd77, #f0e68c); /* Vibrant multi-color gradient */
+    background-size: 400% 400%;
+    animation: gradientAnimation 15s ease infinite;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden; /* To keep the particles within the view */
+  }
+  
+  /* Gradient Animation */
+  @keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  /* Subtle Overlay Pattern for Texture */
+  body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('https://www.transparenttextures.com/patterns/cubes.png');
+    opacity: 0.2;
+    z-index: 1;
+  }
+  
+  /* Particle Animation for Background */
+  body::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    background: radial-gradient(circle, white 2px, transparent 3px) repeat;
+    background-size: 100px 100px;
+    opacity: 0.3;
+    animation: particleMove 20s linear infinite;
+  }
+  
+  /* Particle Movement Animation */
+  @keyframes particleMove {
+    0% { background-position: 0 0; }
+    100% { background-position: 100vw 100vh; }
+  }
+  
+  /* Container Styling */
+.container {
+    position: relative;
+    z-index: 2;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.8); /* More transparency */
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    max-width: 400px;
+    margin: auto;
+    animation: pulse 5s infinite;
+  }
+  
+  /* Glow Pulse Effect */
+  @keyframes pulse {
+    0% { box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); }
+    50% { box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5); }
+    100% { box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); }
+  }
+  
+  /* Header Styling */
+  h1 {
+    font-size: 24px;
+    color: #ff6e7f;
+    margin-bottom: 20px;
+  }
+  
+  /* Text Glow Effect */
+  @keyframes textGlow {
+    0% { text-shadow: 0 0 10px #ff6e7f, 0 0 20px #ff6e7f; }
+    100% { text-shadow: 0 0 5px #ff6e7f, 0 0 10px #ff6e7f; }
+  }
+  
+  /* Footer and Small Text */
+  p {
+    color: #333;
+    font-size: 14px;
+  }
+  
+  /* Notification Bubble */
+  .notification {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+    font-weight: bold;
+    box-shadow: 0 0 15px rgba(76, 175, 80, 0.6);
+    transition: transform 0.2s ease;
+  }
+  
+  .notification:hover {
+    transform: scale(1.05); /* Subtle hover effect */
+  }
+  
+  /* Error or Alert Notification */
+  .notification.error {
+    background-color: #f44336;
+    box-shadow: 0 0 15px rgba(244, 67, 54, 0.6);
+  }
+  
+  img {
+    width: 80px;
+    height: auto;
+    margin-top: 20px;
+    transition: transform 0.3s ease;
+  }
+  
+  img:hover {
+    transform: scale(1.1) rotate(5deg); /* Fun hover effect on the image */
+  }
