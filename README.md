@@ -52,4 +52,4 @@ To disable or remove the extension:
 
 ![Managing Extension](images/manage-extension.png)
 
-**Enojy!**
+**Enjoy!**
