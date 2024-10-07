@@ -34,11 +34,11 @@ To install the Gmail Link Scanner extension:
 
 Once installed, the Gmail Link Scanner automatically scans all the links in your Gmail messages for malicious content.
 
-#### Example of malicious Link notification:
+#### Example of malicious link notification:
 If a malicious link is detected, you'll see a red notification like the following:
 <img src="images/malicious-link-detected.png" width="800" />
 
-#### Example of Safe Link Example notification:
+#### Example of safe link notification:
 For safe links, a green notification will appear:
 <img src="images/safe-link.png" width="800" />
 

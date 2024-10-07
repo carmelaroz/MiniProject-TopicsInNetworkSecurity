@@ -1,7 +1,7 @@
 /* Body and Overall Layout */
 body {
     font-family: 'Arial', sans-serif;
-    background: linear-gradient(135deg, #ff6e7f, #bfe9ff, #77dd77, #f0e68c); /* Vibrant multi-color gradient */
+    background-color: #ffffff00;
     background-size: 400% 400%;
     animation: gradientAnimation 15s ease infinite;
     margin: 0;
@@ -12,12 +12,12 @@ body {
     justify-content: center;
     align-items: center;
     position: relative;
-    overflow: hidden; /* To keep the particles within the view */
+    overflow: hidden;
   }
   
   /* Gradient Animation */
   @keyframes gradientAnimation {
-    0% { background-position: 0% 50%; }
+    0% { background-position: 0% 0%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
   }
@@ -78,9 +78,10 @@ body {
   
   /* Header Styling */
   h1 {
-    font-size: 24px;
-    color: #ff6e7f;
+    font-size: 26px;
+    color: #ebde9f;
     margin-bottom: 20px;
+    -webkit-text-stroke: 1px rgba(100, 100, 100, 0.491);
   }
   
   /* Text Glow Effect */
@@ -125,5 +126,5 @@ body {
   }
   
   img:hover {
-    transform: scale(1.1) rotate(5deg); /* Fun hover effect on the image */
+    transform: scale(1.1) rotate(0deg); /* Fun hover effect on the image */
   }
